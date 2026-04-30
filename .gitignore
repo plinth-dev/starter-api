@@ -1,0 +1,25 @@
+# Go
+bin/
+dist/
+*.exe
+*.test
+*.out
+coverage.txt
+coverage.html
+
+# Local env (real secrets are committed never)
+.env
+.env.local
+
+# Generated
+internal/repository/*.sql.go
+api/swagger.json
+api/swagger.yaml
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
