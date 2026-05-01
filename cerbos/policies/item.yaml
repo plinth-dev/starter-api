@@ -1,0 +1,28 @@
+---
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  resource: Item
+  version: default
+
+  # Reads, lists, creates: any authenticated user.
+  # Updates and deletes: the owner, OR any user with the "admin" role.
+  rules:
+    - actions: ["read", "list", "create"]
+      effect: EFFECT_ALLOW
+      roles:
+        - editor
+        - viewer
+        - admin
+
+    - actions: ["update", "delete"]
+      effect: EFFECT_ALLOW
+      condition:
+        match:
+          expr: request.resource.attr.owner_id == request.principal.id
+      roles:
+        - editor
+
+    - actions: ["update", "delete"]
+      effect: EFFECT_ALLOW
+      roles:
+        - admin
