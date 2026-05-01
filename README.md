@@ -131,7 +131,13 @@ Drop-in candidates: [Auth0](https://auth0.com), [Clerk](https://clerk.com), [Sta
 
 ## Cerbos policies
 
-`cerbos/policies/item.yaml` is the starter policy for the `Item` resource: any authenticated role can read / list / create; only the owner (or anyone with the `admin` role) can update / delete. Tweak this for your domain — Cerbos hot-reloads on file change.
+`cerbos/policies/item.yaml` is the starter policy for the `Item` resource:
+
+- `read` / `list` / `create`: any of the three roles (`viewer`, `editor`, `admin`).
+- `update` / `delete`: an `editor` who owns the row (`request.resource.attr.owner_id == request.principal.id`), OR anyone with the `admin` role.
+- A `viewer` who happens to own a row is **not** allowed to mutate it — write capability is gated on role, not just ownership.
+
+Tweak for your domain — Cerbos hot-reloads on file change.
 
 The dev `cerbos/config.yaml` enables the disk driver pointing at `./policies` and disables Cerbos's own audit log (we have our own audit pipeline). For production, swap to git-driven storage.
 
@@ -142,15 +148,18 @@ After cloning:
 1. `go.mod` — change the module path: `github.com/<org>/<module>-api`.
 2. `internal/config/config.go` — adjust required env keys for your service.
 3. `cerbos/policies/` — replace `Item` with your resource kind(s).
-4. `db/migrations/` — replace the `items` table with your schema.
-5. `internal/repository/items.go`, `internal/service/items.go`, `internal/handlers/items.go` — rename / extend for your resource(s).
-6. `cmd/server/main.go` — register your additional handlers.
-7. **Replace `internal/middleware/auth.go` with real auth** before going to production.
+4. **String literals that match the Cerbos kind:** `internal/service/items.go` references `Kind: "Item"` in two places (the resource passed to `authz.CheckAction` and the audit `Resource.Kind`). Rename both — Cerbos returns `Denied` if the kind in the request doesn't match the policy file, so a stale literal is a silent authorization failure.
+5. `db/migrations/` — replace the `items` table with your schema.
+6. `internal/repository/items.go`, `internal/service/items.go`, `internal/handlers/items.go` — rename / extend for your resource(s).
+7. `cmd/server/main.go` — register your additional handlers.
+8. **Replace `internal/middleware/auth.go` with real auth** before going to production.
 
 ## Production hardening
 
 The starter is *clone-ready*, not *production-ready out of the box*. Before deploying:
 
+- **Set `APP_ENV=production`.** This is the single most important env switch: `sdk-go/authz.New` rejects `CERBOS_ALLOW_BYPASS=1` only when `APP_ENV=production`, and audit defaults flip with it. Without this, a misconfigured deploy can silently bypass authz checks.
+- **Unset `CERBOS_ALLOW_BYPASS`** (and never set it in any production environment file). The check above is your last line of defence; relying on it without removing the variable is brittle.
 - Replace the auth middleware (above).
 - Swap the audit `MemoryProducer` for a NATS / Kafka producer; otherwise audit events vanish on restart.
 - Set `CERBOS_TLS=true` and supply a real CA bundle if your Cerbos PDP has TLS.
