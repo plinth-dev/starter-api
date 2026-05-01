@@ -6,13 +6,13 @@ require (
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.9.2
-	github.com/plinth-dev/sdk-go/audit v0.0.0-20260501054031-9a6b8acc104a
-	github.com/plinth-dev/sdk-go/authz v0.0.0-20260501054031-9a6b8acc104a
-	github.com/plinth-dev/sdk-go/errors v0.0.0-20260501054031-9a6b8acc104a
-	github.com/plinth-dev/sdk-go/health v0.0.0-20260501054031-9a6b8acc104a
-	github.com/plinth-dev/sdk-go/otel v0.0.0-20260501054031-9a6b8acc104a
-	github.com/plinth-dev/sdk-go/paginate v0.0.0-20260501054031-9a6b8acc104a
-	github.com/plinth-dev/sdk-go/vault v0.0.0-20260501054031-9a6b8acc104a
+	github.com/plinth-dev/sdk-go/audit v0.1.0
+	github.com/plinth-dev/sdk-go/authz v0.1.0
+	github.com/plinth-dev/sdk-go/errors v0.1.0
+	github.com/plinth-dev/sdk-go/health v0.1.0
+	github.com/plinth-dev/sdk-go/otel v0.1.0
+	github.com/plinth-dev/sdk-go/paginate v0.1.0
+	github.com/plinth-dev/sdk-go/vault v0.1.0
 	go.opentelemetry.io/otel/trace v1.43.0
 )
 
