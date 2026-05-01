@@ -1,10 +1,11 @@
 # Plinth — API module starter
 
+> **Status: not yet released — Phase C in progress.**
+> The repo exists; the SDK packages it will import are still being designed in [`sdk-go`](https://github.com/plinth-dev/sdk-go) (Phase B). The "Quick start" and "What v0.1.0 ships with" sections below describe the **target shape**, not what you'd clone today. Track progress at [plinth.run](https://plinth.run) and on the [roadmap](https://github.com/plinth-dev/.github/blob/main/ROADMAP.md).
+
 A clone-ready Go 1.23 module starter that imports `github.com/plinth-dev/sdk-go/*` packages. Authentication enforcement, fail-closed authorization, audit emission, OTel tracing, structured logging, healthcheck, and a strict three-layer architecture — all pre-wired.
 
-> **Status: v0.1.0 — Phase C in progress.** Cloneable, but the SDK packages it depends on are still in design.
-
-## Quick start
+## Quick start (target — Phase C)
 
 ```bash
 git clone https://github.com/plinth-dev/starter-api my-module-api
@@ -19,7 +20,7 @@ For everything-running-locally:
 docker compose up --build      # Postgres, Cerbos, NATS, SigNoz, the module
 ```
 
-## What's wired
+## What v0.1.0 ships with (target)
 
 - **Go 1.23** with `chi` router and `log/slog` structured logging.
 - **Three-layer architecture**: `internal/handlers/` → `internal/service/` → `internal/repository/`. Boundaries enforced via Go's `internal/` visibility rules and a CI lint.
@@ -32,7 +33,7 @@ docker compose up --build      # Postgres, Cerbos, NATS, SigNoz, the module
 - **Tests**: `testcontainers-go` against real Postgres / NATS / Redis. No mocks of the database.
 - **OpenAPI**: generated from struct tags via `swaggo`.
 
-## Layout
+## Planned layout
 
 ```
 .
